@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+</head>
+
+<body>
+
+    <script>
+
+        // 1. Student Class
+
+        class Student {
+
+            constructor(id, name, grades, attendance) {
+                this.id = id;
+                this.name = name;
+                this.grades = grades;
+                this.attendance = attendance;
+            }
+
+            // Calculate Average using reduce
+            calculateAverage() {
+                let total = this.grades.reduce((sum, grade) => sum + grade, 0);
+                return total / this.grades.length;
+            }
+
+            // Get Letter Grade
+            getGrade(average) {
+                if (average >= 90) {
+                    return "A";
+                } else if (average >= 80) {
+                    return "B";
+                } else if (average >= 70) {
+                    return "C";
+                } else if (average >= 60) {
+                    return "D";
+                } else if (average >= 50) {
+                    return "E";
+                } else {
+                    return "F";
+                }
+            }
+
+            // Get Final Result
+            getResult(average) {
+                if (average >= 50 && this.attendance >= 75) {
+                    return "ناجح";
+                } else {
+                    return "يحتاج مراجعة";
+                }
+            }
+        }
+
+
+        // 2. Create Students Array
+
+        const studentsList = [
+            new Student(101, "Ahmed", [85, 90, 80], 90),
+            new Student(102, "Sara", [45, 48, 50], 80),
+            new Student(103, "Mohamed", [60, 65, 55], 70),
+            new Student(104, "Hoda", [40, 45, 48], 85)
+        ];
+
+
+        // 3. Filter Struggling Students
+
+        const strugglingStudents = studentsList.filter(student => {
+            let average = student.calculateAverage();
+            return average >= 40 && average < 50;
+        });
+
+
+        // 4. Add 5 Mercy Marks using map
+
+        const mercyStudents = strugglingStudents.map(student => {
+            let average = student.calculateAverage();
+
+            return {
+                id: student.id,
+                name: student.name,
+                averageBeforeMercy: average,
+                averageAfterMercy: average + 5
+            };
+        });
+
+
+        // 5. Calculate Total using reduce
+
+        const totalAfterMercy = mercyStudents.reduce((sum, student) => {
+            return sum + student.averageAfterMercy;
+        }, 0);
+
+
+        // 6. Calculate General Average
+
+        const averageAfterMercy = mercyStudents.length > 0
+            ? totalAfterMercy / mercyStudents.length
+            : 0;
+
+
+        // 7. Print Students Report in Console
+
+        console.log("Students Report");
+
+        studentsList.forEach(student => {
+
+            let average = student.calculateAverage();
+            let grade = student.getGrade(average);
+            let result = student.getResult(average);
+
+            console.log("Student Name:", student.name);
+            console.log("Average:", average);
+            console.log("Grade:", grade);
+            console.log("Final Result:", result);
+            console.log("----------------------");
+
+        });
+
+
+        // 8. Print Mercy Students
+
+        console.log("Students Who Received Mercy Marks:");
+        console.log(mercyStudents);
+
+
+        // 9. Print Average After Mercy
+
+        console.log("General Average After Mercy:", averageAfterMercy);
+
+    </script>
+
+</body>
+
+</html>
